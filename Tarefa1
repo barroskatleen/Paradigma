@@ -1,0 +1,42 @@
+-- Criar tabela Departamento
+CREATE TABLE Departamento (
+  Id INT PRIMARY KEY,
+  Nome VARCHAR(100)
+);
+
+-- Criar tabela Colaborador
+CREATE TABLE Colaborador (
+  Matricula INT PRIMARY KEY,
+  Nome VARCHAR(100),
+  Salario DECIMAL(10, 2),
+  DeptId INT,
+  FOREIGN KEY (DeptId) REFERENCES Departamento(Id)
+);
+
+-- Inserir dados na tabela Departamento
+INSERT INTO Departamento (Id, Nome) VALUES 
+(1, 'TI'),
+(2, 'Vendas');
+
+-- Inserir dados na tabela Colaborador
+INSERT INTO Colaborador (Matricula, Nome, Salario, DeptId) VALUES
+(1, 'Joe', 70000.00, 1),
+(2, 'Henry', 80000.00, 2),
+(3, 'Sam', 60000.00, 2),
+(4, 'Max', 90000.00, 1);
+
+-- Consulta para colaboradores com maior salário por departamento
+SELECT 
+    d.Nome AS Departamento,
+    c.Nome AS Pessoa,
+    c.Salario
+FROM 
+    Colaborador c
+JOIN 
+    Departamento d ON c.DeptId = d.Id
+WHERE 
+    c.Salario = (
+        SELECT MAX(c2.Salario)
+        FROM Colaborador c2
+        WHERE c2.DeptId = c.DeptId
+    );
